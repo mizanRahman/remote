@@ -2,12 +2,20 @@ require 'rest-client'
 require 'net/ssh'
 
 
-def ssh 
-    @ssh = Net::SSH.start(@hostname, @username, :password => @password)
+def ssh
+	begin
+		puts "connecing to #{@hostname}"
+	    session = Net::SSH.start(@hostname, @username, :password => @password)
+	    puts "connected."
+	    yield session
+	    session.close
+  	rescue
+    	puts "Unable to connect to #{@hostname} using #{@username}/#{@password}"
+	end    	
 end
 
 
-def remote_run(ssh,cmd)
+def run(ssh,cmd)
 	res = ssh.exec!(cmd)
     puts res
 end
@@ -15,7 +23,7 @@ end
 
 def netcat(ssh, ports) 
 	ports.each do |port|
-    	remote_run ssh, "nc -zv #{@hostname} #{port}"
+    	run ssh, "nc -zv #{@hostname} #{port}"
 	end
 end
 
@@ -31,3 +39,14 @@ def check_health(url, details_trace=false)
 	puts res if details_trace
 	res.code==200
 end
+
+
+
+def resolve_etc_hosts(ssh, hosts) 
+	hosts.each do |host|
+		cmd = "ping -q -c 1 -t 1 #{host}" + '| grep PING | sed -e "s/).*//" | sed -e "s/.*(//"'
+		puts host
+    	run ssh, cmd
+	end
+end
+

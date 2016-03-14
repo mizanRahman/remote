@@ -9,26 +9,33 @@ require './util.rb'
 
 desc "connect to server"
 task :connect do
-	ssh
-    puts "connecing to #{@hostname}"
-    remote_run @ssh, 'uname -a'
-    puts "connected."
+	ssh do |session|
+		puts "connecing to #{@hostname}"
+	    run session, 'uname -a'
+	    puts "connected."
+	end
 end
 
 desc "show server info"
-task :info => [:connect] do
-    remote_run @ssh, 'uname -a'
-    remote_run @ssh, 'top'
+task :info => [] do
+	ssh do |session|
+	    run session, 'uname -a'
+    	run session, 'top'
+	end
 end
 
 desc "network status"
-task :network => [:connect, :netcat] do
-    remote_run @ssh,'netstat -nap| grep tcp'
+task :network => [:netcat] do
+	ssh do |session|
+   		run session,'netstat -nap| grep tcp'
+	end
 end
 
 desc "network status"
-task :netcat =>[:connect] do
-	netcat @ssh, [21,22,80,8080,3000,1531,3306]
+task :netcat =>[] do
+	ssh do |session|
+		netcat session, [21,22,80,8080,3000,1531,3306]
+	end
 end
 
 desc "network status"
@@ -41,8 +48,17 @@ end
 
 
 desc "service status"
-task :service, [:arg1] => [:connect] do
-	remote_run @ssh, 'for qw in `ls /etc/init.d/*`; do  $qw status | grep -i running; done'
+task :service, [:arg1] => [] do
+	ssh do |session|
+		run session, 'for qw in `ls /etc/init.d/*`; do  $qw status | grep -i running; done'
+	end
 end
 
+
+desc "resolve host by pinging the host"
+task :resolve => [] do
+	ssh do |session|
+		resolve_etc_hosts session, ['app1.kpp.com','localhost', 'google.com']
+	end
+end
 
