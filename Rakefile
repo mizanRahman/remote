@@ -81,8 +81,10 @@ task :changelog => [] do
 	last_hash = File.open(commit_hash_file, "a+").first
 	puts "last_hash=#{last_hash}"
 
+	# last_hash = "e6504cf"
+
 	if last_hash != hash
-		git_logs = `git log #{last_hash}\.\.  --oneline`
+		git_logs = `git log #{last_hash}..  --oneline`
 		puts git_logs
 		puts "updating"
 		File.open(commit_hash_file, 'w+') do |f|
