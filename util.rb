@@ -5,7 +5,9 @@ require 'net/ssh'
 def ssh
 	begin
 		puts "connecing to #{@hostname}"
-	    session = Net::SSH.start(@hostname, @username, :password => @password)
+		if not @session
+	    	session = Net::SSH.start(@hostname, @username, :password => @password)
+	    end
 	    puts "connected."
 	    yield session
 	    session.close
@@ -45,8 +47,36 @@ end
 def resolve_etc_hosts(ssh, hosts) 
 	hosts.each do |host|
 		cmd = "ping -q -c 1 -t 1 #{host}" + '| grep PING | sed -e "s/).*//" | sed -e "s/.*(//"'
-		puts host
+		puts cmd
     	run ssh, cmd
 	end
 end
+
+def backup(ssh, paths) 
+	paths.each do |path|
+
+    	dir = path[0..path.rindex("/")-1]
+    	puts dir
+
+
+		cmd = "ls -la #{dir}"
+		puts cmd
+    	run ssh, cmd
+  #   	# find the directory form path patern (config/*.prop--> config)
+
+    	backup_dir = "#{dir}/backup/#{Time.now.strftime('%Y%m%d-%H%M%S')}"
+    	puts backup_dir
+    	cmd = "test -d #{backup_dir} || mkdir -p #{backup_dir} && cp #{path} #{backup_dir}"
+		puts cmd
+    	run ssh, cmd
+
+    	cmd = "ls -la #{backup_dir}"
+		puts cmd
+    	run ssh, cmd
+  # 
+
+	end
+end
+
+
 

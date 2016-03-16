@@ -62,3 +62,20 @@ task :resolve => [] do
 	end
 end
 
+
+desc "resolve host by pinging the host"
+task :backup => [] do
+	ssh do |session|
+		backup session, ['config/*.properties','server/war/*.war']
+	end
+end
+
+
+desc "resolve host by pinging the host"
+task :current_hash => [] do
+	hash = `git status`
+	hash = `git checkout .`
+	hash = `git rev-parse HEAD`
+	puts hash
+
+end
