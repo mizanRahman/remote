@@ -75,12 +75,15 @@ desc "resolve host by pinging the host"
 task :changelog => [] do
 	system "git status"
 	hash = `git rev-parse HEAD`
-	# puts hash
+	puts "hash=#{hash}"
 	commit_hash_file=".commit_hash"
 	
 	last_hash = File.open(commit_hash_file, "a+").first
+	puts "last_hash=#{last_hash}"
 
 	if last_hash != hash
+		git_logs = `git log #{last_hash}..#{hash}  --oneline `
+		puts git_logs
 		puts "updating"
 		File.open(commit_hash_file, 'a+') do |f|
 			f.write(hash) 
