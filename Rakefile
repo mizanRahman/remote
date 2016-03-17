@@ -1,8 +1,13 @@
 require 'rubygems'
-
+require 'uri'
 require './util.rb'
 
-@hostname = "192.168.33.10"
+# @hostname = "192.168.33.10"
+# @username = "vagrant"
+# @password = "vagrant"
+
+@hostname = "49.0.39.237"
+
 @username = "vagrant"
 @password = "vagrant"
 
@@ -38,12 +43,18 @@ task :netcat =>[] do
 	end
 end
 
-desc "network status"
+desc "web service status"
 task :http, [:arg1] => [] do
-	check_health 'http://httpbin.org/get'
-	check_health 'http://httpbin.org/post', true
-	check_health 'http://google.com'
-	# check_health 'http://map.kpp.com/mobile-platform-1.0'
+		File.open(".health_check", "r").each do |line|
+
+			if line =~ URI::regexp
+			    url = line.strip
+				check_health url, true
+			else
+				puts "#{line.strip} invalid url. skipping..."
+			end
+
+		end
 end
 
 

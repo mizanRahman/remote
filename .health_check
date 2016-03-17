@@ -1,0 +1,23 @@
+
+
+http://49.0.39.237:8080/mobile-platform-1.0/
+http://49.0.39.237:8080/cloud-platform-1.0/
+http://49.0.39.237:8080/token-service-provider-1.0/
+http://49.0.39.237:8080/token-service-provider-1.0/
+http://49.0.39.237:8080/issuance-system-core-1.0/
+
+http://49.0.39.237:8080/kms-core-1.0/
+http://49.0.39.237:8080/KonaCAServer-1.0/
+http://49.0.39.237:8080/od-ui
+# http://220.86.159.79:9090/CMS
+http://220.86.159.79:10850/psm-backend-1.0/
+# http://220.86.159.79:9091/main
+# http://220.86.159.79:10851/
+# http://220.86.159.79:10000/payment-processor-1.0
+# http://220.86.159.79:10001/
+# http://220.86.159.79:10002/web/transactions/list
+# http://220.86.159.79:10005/issuer-authorization-system-1.0/
+# http://220.86.159.79:10006/web/card/list
+
+
+

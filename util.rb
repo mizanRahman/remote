@@ -1,7 +1,6 @@
 require 'rest-client'
 require 'net/ssh'
 
-
 def ssh
 	begin
 		puts "connecing to #{@hostname}"
@@ -17,7 +16,7 @@ def ssh
 end
 
 
-def run(ssh,cmd)
+def run(ssh, cmd)
 	res = ssh.exec!(cmd)
     puts res
 end
@@ -29,19 +28,19 @@ def netcat(ssh, ports)
 	end
 end
 
-
 def check_health(url, details_trace=false)
+	status=false
 	begin
 	res = RestClient.get url
+	status = true
 	rescue => e
-	  res = e.response
+		status=false
+	  # res = e.response
 	end
-
-	puts "======| #{url} is #{res.code==200? 'fine':'not healthy'} |======"
-	puts res if details_trace
-	res.code==200
+	# puts res if details_trace
+	puts "======| #{url} #{status ? 'healthy...' : 'not healthy!!!'} |======"
+	status
 end
-
 
 
 def resolve_etc_hosts(ssh, hosts) 
@@ -51,6 +50,7 @@ def resolve_etc_hosts(ssh, hosts)
     	run ssh, cmd
 	end
 end
+
 
 def backup(ssh, paths) 
 	paths.each do |path|
